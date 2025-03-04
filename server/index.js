@@ -28,7 +28,7 @@ app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
 app.use("/assets", express.static(path.join(__dirname, "public/assets")));
 app.use(cors(
     {
-        origin: [`http://localhost:3000`],
+        origin: [`https://mern-crud-client-sandy.vercel.app/`],
         credentials: true,
         methods: ['GET', 'POST', 'PUT', 'DELETE'],
         allowedHeaders: ['Content-Type', 'Authorization']
