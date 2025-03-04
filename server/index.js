@@ -36,6 +36,19 @@ app.use("/assets", express.static(path.join(__dirname, "public/assets")));
 // ))
 app.use(cors());
 
+/* MONGOOSE SETUP*/
+// const PORT = process.env.PORT || 6001;
+mongoose.connect(process.env.MONGO_URL, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+}).then(() => {
+    console.log("MongoDB connected successfully!");
+}).catch((error) => {
+    // console.log(`${error} did not connect`)
+    console.error("MongoDB Connection Error:", error);
+    process.exit(1);
+})
+
 /* FILE STORAGE */
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -59,21 +72,13 @@ app.use("/auth", authRoutes);
 app.use("/api/user", userRoutes);
 app.use("/api/admin", adminRoutes);
 
+app.get("/", (req, res) => {
+    res.json({ success: true, message: "Server is running!" });
+});
+
 app.use((req, res) => {
     res.status(404).json({ success: false, status: 404, message: "Not found" });
 });
 
-/* MONGOOSE SETUP*/
-// const PORT = process.env.PORT || 6001;
-mongoose.connect(process.env.MONGO_URL, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-}).then(() => {
-    console.log("MongoDB connected successfully!");
-}).catch((error) => {
-    // console.log(`${error} did not connect`)
-    console.error("MongoDB Connection Error:", error);
-    process.exit(1);
-})
 // app.listen(PORT, () => console.log(`Server Port: ${PORT}`));
 app.listen();
