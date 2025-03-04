@@ -18,12 +18,12 @@ import adminRoutes from "./routes/admin.js";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 dotenv.config();
-const { createServer } = require("@vercel/node")
+// const { createServer } = require("@vercel/node")
 const app = express();
 app.use(express.json());
 app.use(helmet());
 app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" }));
-app.use(bodyParser.json({ limit: "30mb", extented: true }));
+app.use(bodyParser.json({ limit: "30mb", extended: true }));
 app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
 app.use("/assets", express.static(path.join(__dirname, "public/assets")));
 // app.use(cors(
@@ -70,5 +70,10 @@ mongoose.connect(process.env.MONGO_URL, {
     useUnifiedTopology: true,
 }).then(() => {
     console.log("MongoDB connected successfully!");
-}).catch((error) => console.log(`${error} did not connect`))
-app.listen(PORT, () => console.log(`Server Port: ${PORT}`));
+}).catch((error) => {
+    // console.log(`${error} did not connect`)
+    console.error("MongoDB Connection Error:", error);
+    process.exit(1);
+})
+// app.listen(PORT, () => console.log(`Server Port: ${PORT}`));
+app.listen();
