@@ -32,7 +32,12 @@ app.use("/assets", express.static(path.join(__dirname, "public/assets")));
 //         credentials: true
 //     }
 // ))
-app.use(cors());
+app.use(cors({
+    origin: 'https://mern-crud-client-sandy.vercel.app', // Allow frontend domain
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    credentials: true // If using cookies or authentication tokens
+  }));
+// app.use(cors());
 
 /* FILE STORAGE */
 const storage = multer.diskStorage({
