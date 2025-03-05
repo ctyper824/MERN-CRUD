@@ -18,36 +18,21 @@ import adminRoutes from "./routes/admin.js";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 dotenv.config();
-// const { createServer } = require("@vercel/node")
 const app = express();
 app.use(express.json());
 app.use(helmet());
 app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" }));
-app.use(bodyParser.json({ limit: "30mb", extended: true }));
+app.use(bodyParser.json({ limit: "30mb", extented: true }));
 app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
 app.use("/assets", express.static(path.join(__dirname, "public/assets")));
 // app.use(cors(
 //     {
-//         origin: [`https://mern-crud-client-sandy.vercel.app/`],
-//         credentials: true,
+//         origin: [`http://localhost:3000`],
 //         methods: ['GET', 'POST', 'PUT', 'DELETE'],
-//         allowedHeaders: ['Content-Type', 'Authorization']
+//         credentials: true
 //     }
 // ))
 app.use(cors());
-
-/* MONGOOSE SETUP*/
-// const PORT = process.env.PORT || 6001;
-mongoose.connect(process.env.MONGO_URL, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-}).then(() => {
-    console.log("MongoDB connected successfully!");
-}).catch((error) => {
-    // console.log(`${error} did not connect`)
-    console.error("MongoDB Connection Error:", error);
-    process.exit(1);
-})
 
 /* FILE STORAGE */
 const storage = multer.diskStorage({
@@ -72,13 +57,16 @@ app.use("/auth", authRoutes);
 app.use("/api/user", userRoutes);
 app.use("/api/admin", adminRoutes);
 
-app.get("/", (req, res) => {
-    res.json({ success: true, message: "Server is running!" });
-});
-
 app.use((req, res) => {
     res.status(404).json({ success: false, status: 404, message: "Not found" });
 });
 
-// app.listen(PORT, () => console.log(`Server Port: ${PORT}`));
-app.listen();
+/* MONGOOSE SETUP*/
+const PORT = process.env.PORT || 6001;
+mongoose.connect(process.env.MONGO_URL, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+}).then(() => {
+    console.log("MongoDB connected successfully!");
+}).catch((error) => console.log(`${error} did not connect`))
+app.listen(PORT, () => console.log(`Server Port: ${PORT}`));
